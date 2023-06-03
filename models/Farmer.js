@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const FarmerSchema = new mongoose.Schema(
   {
-   
+
     email: {
       type: String,
       required: true,
@@ -27,9 +27,7 @@ const FarmerSchema = new mongoose.Schema(
     },
     listterrain :{
         type: [],
-    } 
-
-
+    }
 
   },
   { timestamps: true }

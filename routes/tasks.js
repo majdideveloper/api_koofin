@@ -17,9 +17,9 @@ router.post("/", async (req, res)=>{
 
 
 // Get One Task
-// Get one Terrain 
+// Get one Terrain
 router.get("/:id", async (req, res) => {
-    
+
     try {
         const task = await newTask.findById(req.params.id);
         res.status(200).json(task);
@@ -33,8 +33,8 @@ router.get("/:id", async (req, res) => {
 // Get all Task for plating
 router.get("/farmer/:idfarmer", async (req, res) => {
     const idFarmer = req.params.idfarmer;
-  
-    
+
+
     try {
         const terrains = await Terrain.find(
         {farmerid:{
@@ -48,13 +48,8 @@ router.get("/farmer/:idfarmer", async (req, res) => {
         console.log(err)
     }
 
-    
+
 });
-
-
-
-
-
 
 
 
