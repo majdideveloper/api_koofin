@@ -12,16 +12,16 @@ const { verifyToken } = require('../middlewares/auth');
 router.put("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const { token, ...updateData } = req.body;
 
-    if (req.farmer.userId === id) {
+    if (req.farmer.farmerId === id) {
       const updatedFarmer = await Farmer.findByIdAndUpdate(
         id,
-        { $set: updateData },
+        { $set: req.body },
         { new: true }
       );
-
-      res.status(200).json(updatedFarmer);
+      console.log(updatedFarmer)
+      const {password, ...others} = updatedFarmer._doc;
+      res.status(200).json(updatedFarmer.name);
     } else {
       res.status(401).json("You can update only your account!");
     }
@@ -57,19 +57,20 @@ router.delete("/:id",async (req, res)=>{
 // Get farmer
 router.get("/:id", verifyToken, async (req, res)=>{
     try {
+        const { id } = req.params;
 
-        const farmer = await Farmer.findById(req.farmer.farmerId);
-        const {password, ...others} = farmer._doc;
-        // if (farmer){
-        //     res.status(200).json(others)
-        // }
-        // else{
-        //     res.status(200).json(others)
-        // }
+        if (id !== req.farmer.farmerId) {
+          return res.status(403).json({ 'message': 'Unmatched ID' })
+        }
+
+        const farmerObj = await Farmer.findById(req.farmer.farmerId);
+        if (!farmerObj) {
+          return res.status(404).json({ 'message': 'Farmer not found' });
+        }
+        const {password, ...others} = farmerObj._doc;
         res.status(200).json(others);
-
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json({ 'message': 'Error getting farmer' });
         console.log(error)
     }
 })
