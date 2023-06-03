@@ -2,13 +2,18 @@ const router = require('express').Router();
 
 const Terrain = require('../models/Terrain');
 const Farmer = require('../models/Farmer');
+const { verifyToken } = require('../middlewares/auth');
 
 
 
-router.post("/", async (req, res) => {
-    
-    const newTerrain = new Terrain(req.body);
+router.post("/", verifyToken,async (req, res) => {
+
     try {
+      if (req.farmer.farmerId !== req.body.farmerid) {
+        return res.status(401).json({ message: "You can only create terrain for yourself." });
+      }
+        const newTerrain = new Terrain(req.body);
+
         const terrain = await newTerrain.save();
 
         res.status(200).json(terrain);
@@ -19,7 +24,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-//Update Terrain 
+//Update Terrain
 router.put("/:id", async (req, res) => {
     try {
       const terrain = await Terrain.findById(req.params.id);
@@ -44,7 +49,7 @@ router.put("/:id", async (req, res) => {
     }
   });
 
-  //Delete Terrain 
+  //Delete Terrain
 router.delete("/:id", async (req, res) => {
     try {
       const terrain = await Terrain.findById(req.params.id);
@@ -62,9 +67,9 @@ router.delete("/:id", async (req, res) => {
       res.status(500).json(err);
     }
   });
-// Get one Terrain 
+// Get one Terrain
 router.get("/:id", async (req, res) => {
-    
+
     try {
         const terrain = await newTerrain.findById(req.params.id);
         res.status(200).json(terrain);
@@ -75,9 +80,9 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Get all Terrain for farmers
+// Get all Terrains
 router.get("/", async (req, res) => {
-    
+
     try {
         const terrains = await Terrain.find();
         res.status(200).json(terrains);
@@ -87,14 +92,18 @@ router.get("/", async (req, res) => {
         console.log(err)
     }
 
-    
+
 });
 
-// Get all Terrain for farmers
+/* /api/terrains/farmer/:id
+its supposed to be -> /api/farmers/:id/terrains
+you have to get all terrains associate to farmers
+from the farmers Routing not the terrains
+you just return listofterrain of the farmers document*/
 router.get("/farmer/:idfarmer", async (req, res) => {
     const idFarmer = req.params.idfarmer;
-  
-    
+
+
     try {
         const terrains = await Terrain.find(
         {farmerid:{
@@ -108,7 +117,7 @@ router.get("/farmer/:idfarmer", async (req, res) => {
         console.log(err)
     }
 
-    
+
 });
 
 
