@@ -1,38 +1,37 @@
 const router = require('express').Router();
 const Farmer = require('../models/Farmer');
+const Terrain = require('../models/Terrain');
+const Plating = require('../models/Plating');
 
 const bcrypt = require("bcrypt");
-
-
+const { verifyToken } = require('../middlewares/auth');
 
 
 
 
 
 //UPDATE
-router.put("/:id", async (req, res) => {
-    if (req.body.farmerId === req.params.id) {
-      if (req.body.password) {
-        const salt = await bcrypt.genSalt(10);
-        req.body.password = await bcrypt.hash(req.body.password, salt);
-      }
-      try {
-        const updatedFarmer = await Farmer.findByIdAndUpdate(
-          req.params.id,
-          {
-            $set: req.body,
-          },
-          { new: true }
-        );
-        res.status(200).json(updatedFarmer);
-      } catch (err) {
-        res.status(500).json(err);
-        console.log(err)
-      }
+router.put("/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+   // if (req.farmer.farmerId === id) {
+    if (req.body.farmerId === id) {
+      const updatedFarmer = await Farmer.findByIdAndUpdate(
+        id,
+        { $set: req.body },
+        { new: true }
+      );
+      console.log(updatedFarmer)
+      const {password, ...others} = updatedFarmer._doc;
+      res.status(200).json(others);
     } else {
       res.status(401).json("You can update only your account!");
     }
-  });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating farmer' });
+  }
+});
 // delete farmer
 router.delete("/:id",async (req, res)=>{
     if (req.body.farmerId === req.params.id) {
@@ -58,24 +57,65 @@ router.delete("/:id",async (req, res)=>{
 
 });
 
-// Get farmer
-router.get("/:id", async (req, res)=>{
-    try {
+// // Get farmer
+// router.get("/:id", verifyToken, async (req, res)=>{
+//     try {
+//         const { id } = req.params;
 
-        const farmer = await Farmer.findById(req.params.id);
-        const {password, ...others} = farmer._doc;
-        // if (farmer){
-        //     res.status(200).json(others)
-        // }
-        // else{
-        //     res.status(200).json(others)
-        // }
-        res.status(200).json(others);
-        
-    } catch (error) {
-        res.status(500).json(error);
-        console.log(error)
-    }
+//         if (id !== req.farmer.farmerId) {
+//           return res.status(403).json({ 'message': 'Unmatched ID' })
+//         }
+
+//         const farmerObj = await Farmer.findById(req.farmer.farmerId);
+//         if (!farmerObj) {
+//           return res.status(404).json({ 'message': 'Farmer not found' });
+//         }
+//         const {password, ...others} = farmerObj._doc;
+//         res.status(200).json(others);
+//     } catch (error) {
+//         res.status(500).json({ 'message': 'Error getting farmer' });
+//         console.log(error)
+//     }
+// })
+
+// Get farmer
+router.get("/:id/land",  async (req, res)=>{
+  try {
+      const { id } = req.params;
+
+      // if (id !== req.farmer.farmerId) {
+      //   return res.status(403).json({ 'message': 'Unmatched ID' })
+      // }
+
+      // const farmerObj = await Farmer.findById(id);
+      // if (!farmerObj) {
+      //   return res.status(404).json({ 'message': 'Farmer not found' });
+      // }
+      const lands = await Terrain.find({ farmerid :id });
+    
+      res.status(200).json(lands);
+  } catch (error) {
+      res.status(500).json({ 'message': 'Error getting farmer' });
+      console.log(error)
+  }
+})
+
+
+// Get All Product of Farmer...
+
+router.get("/:id/plating",  async (req, res)=>{
+  try {
+      const { id } = req.params;
+
+      
+      const platings = await Plating.find({ idFarmer :id });
+      console.log(platings);
+    
+      res.status(200).json(platings);
+  } catch (error) {
+      res.status(500).json({ 'message': 'Error getting farmer' });
+      console.log(error)
+  }
 })
 
 

@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const FarmerSchema = new mongoose.Schema(
   {
-   
     email: {
       type: String,
       required: true,
@@ -15,22 +14,36 @@ const FarmerSchema = new mongoose.Schema(
     name: {
         type: String,
       },
+      country:{
+        type:String,
+      },
+      state:{
+        type:String,
+      },
+      city:{
+        type:String,
+      },
     profilePic: {
       type: String,
       default: "",
     },
-    phoneNumber :{
+    phoneNumberOne :{
         type: String,
     },
+    phoneNumberTwo :{
+      type: String,
+  },
     address : {
         type: String,
     },
     listterrain :{
-        type: [],
+        type: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Terrain',
+          }
+        ],
     } 
-
-
-
   },
   { timestamps: true }
 );

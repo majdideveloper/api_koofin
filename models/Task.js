@@ -10,13 +10,19 @@ const TaskSchema = new mongoose.Schema(
     type:{
         type:String,
     },
-    fertilizer_name : {
+    dateTaskField: {
+      type: String,
+      
+    },
+    quantity:{
         type:String,
     },
-    
-    quantity:{
-        type:Number,
+    idProduct: {
+      type: String,
     },
+    nameProduct:{
+      type:String,
+    }
 
 
    

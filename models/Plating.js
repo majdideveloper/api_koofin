@@ -2,30 +2,43 @@ const mongoose = require("mongoose");
 
 const PlatingSchema = new mongoose.Schema(
   {
-   
-    
-    nameOfTheLand: {
-        type: String,
-      },
-      farmername: {
-        type: String,
-      },
-      farmerid: {
-        type: String,
-      },
-      landId:{
-        type:String,
-      },
-    
-    
-    
 
+
+    nameLand: {
+      type: String,
+    },
+    idLand: {
+      type: String,
+    },
+    nameFarmer: {
+      type: String,
+    },
+    idFarmer: {
+      type: String,
+    },
+    nameProduct: {
+      type: String,
+    },
+    imageProduct: {
+      type: String,
+    }, 
+    areaProduct: {
+      type: String,
+    },
     planting: {
-        type:[]
+      type: String
 
     },
-    typeOfPlanting:{
-        type:[]
+    typeOfPlanting: {
+      type: String
+    },
+    listTask :{
+     type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Task',
+        }
+      ],
     }
 
 

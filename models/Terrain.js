@@ -2,44 +2,62 @@ const mongoose = require("mongoose");
 
 const TerrainSchema = new mongoose.Schema(
   {
-   
-    
+
+
     name: {
-        type: String,
-      },
-      farmername: {
-        type: String,
-      },
-      farmerid: {
-        type: String,
-      },
+      type: String,
+    },
+    farmername: {
+      type: String,
+    },
+    farmerid: {
+      type: String,
+    },
+
+    address: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
     
-    address : {
-        type: String,
+    numberofwell: {
+      type: Number,
     },
-    soltype : {
-        type: String,
+    waterSalinity: {
+      type: Number,
     },
-    numberofwell:{
-        type : Number,
+    numberOfBorehole: {
+      type: Number,
     },
-    waterSalinity : {
-        type:Number,
+    area:{
+      type:String,
     },
-    numberOfBorehole:{
-        type:Number,
+    soltype: {
+      type: [],
     },
 
     planting: {
-        type:[]
+      type: []
 
     },
-    typeOfPlanting:{
-        type:[]
+    typeOfPlanting: {
+      type: []
     },
-    listofplating : {
-        type: []
-    }
+    listofplating:{
+      type: [
+         {
+           type: mongoose.Schema.Types.ObjectId,
+           ref: 'Plating',
+         }
+       ],
+     }
 
 
 
